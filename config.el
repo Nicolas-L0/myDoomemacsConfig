@@ -47,110 +47,124 @@
 ;;=============================================================================
 
 ;;; org
-
-;; org capture
-;;(setq +org-capture-notes-file "roam/Slipbox.org"
-;;      +org-capture-todo-file "roam/Slipbox.org"
-;;      +org-capture-journal-file "roam/main/bujo.org")
 (after! org
   (setq org-capture-templates
         '(("t" "Personal (t)odo" entry
            (file+headline "roam/Slipbox.org" "TODOs")
-           "* TODO %?" :prepend t)
+           "* TODO %?" :prepend t :immediate-finish t)
           ("n" "Personal (n)otes" entry
            (file+headline "roam/Slipbox.org" "NOTEs")
-           "* %U %?" :prepend t)
+           "* %U %?" :prepend t :immediate-finish t)
           ("j" "Bullet (j)ournal" entry
            (file+olp+datetree "roam/main/bujo.org")
            "* %u %?"
-           :tree-type month
+           :tree-type month :immediate-finish t
            ;;       :prepend t  ;;set to no-nil = new node on the top
-           )
-          )))
+           )))
+  (setq org-agenda-files '("~/org/roam/Slipbox.org" "~/org/roam/main/bujo.org" "~/org/roam/project/" "~/org/roam/daily/"))
+  )
+
+
+(add-to-list 'org-modules 'org-habit)
+;;(setq org-modules '(org-habit))
 
 
 ;;; org-roam
-
-;; org-roam-templates
-;; refrence from https://jethrokuan.github.io/org-roam-guide/
-(setq org-roam-capture-templates
-      '(("m" "main" plain
-         "* ${title} %?"
-         :if-new (file+head "main/${slug}.org" "#+title: ${title}\n")
-         :immediate-finish t
-         :unnarrowed t)
-        ("r" "reference" plain "* ${title} %?"
-         :if-new
-         (file+head "reference/${title}.org" "#+title: ${title}\n")
-         :immediate-finish t
-         :unnarrowed t)
-        ("a" "article" plain "* ${title} %?"
-         :if-new
-         (file+head "articles/${title}.org" "#+title: ${title}\n")
-         :immediate-finish t
-         :unnarrowed t)
-        ("e" "entity" plain "* ${title} %?"
-         :if-new
-         (file+head "entity/${title}.org" "#+title: ${title}\n")
-         :immediate-finish t
-         :unnarrowed t)
-        ("s" "slipbox" plain "%?"
-         :if-new (file+head+olp "Slipbox.org" "#+title: Slipbox\n" ("NODEs" "%U ${title}"))
-         :immediate-finish t)
-;;
-;;        ("p" "daily preview" plain
-;;         "# %<%Y年%m月%d日 %A (第%W/52周 第%j天)>\n# 来自昨天的私语\n%? \n# 今日计划\n| item | plan time | actual use | done? |\n|------+-----------+------------+-------|\n|      |           |            |       |\n# 今日回顾\n"
-;;         :target (file+head+olp "DAILY.org" ""
-;;                                ("Dailies" "%<%Y-%m-%d %a>"))
-;;         :empty-lines-after 2
-;;         :unnarrowed t)
-        ))
-
-;; Creating the property “type”
 (after! org-roam
-  (cl-defmethod org-roam-node-type ((node org-roam-node))
-    "Return the TYPE of NODE."
-    (condition-case nil
-        (file-name-nondirectory
-         (directory-file-name
-          (file-name-directory
-           (file-relative-name (org-roam-node-file node) org-roam-directory))))
-      (error ""))))
+  ;; org-roam ref will bib & citar
+  (defconst nic/bib-file (concat "/mnt/c/Users/NicEu/OneDrive/Documents/_00PersonalDocuments/OrgNote/notes/roam/biblio.bib"))
+  (setq org-cite-global-bibliography (list nic/bib-file)
+        citar-bibliography org-cite-global-bibliography)
 
-;; Modifying the display template to show the node “type”
-;;(setq org-roam-node-display-template
-;;      (concat "${type:15} ${title:50} " (propertize "${tags}" 'face 'org-tag)))
-(setq org-roam-node-display-template
-      (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  ;; org-roam-templates
+  ;; refrence from https://jethrokuan.github.io/org-roam-guide/
+  (setq org-roam-capture-templates
+        '(("m" "main" plain
+           "* ${title} %?"
+           :if-new (file+head "main/${slug}.org" "#+title: ${title}\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("r" "reference" plain "* ${title} %?"
+           :if-new
+           (file+head "reference/${title}.org" "#+title: ${title}\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("a" "article" plain "* ${title} %?"
+           :if-new
+           (file+head "article/${title}.org" "#+title: ${title}\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("e" "entity" plain "* ${title} %?"
+           :if-new
+           (file+head "entity/${title}.org" "#+title: ${title}\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("p" "project" plain "* ${title} %?"
+           :if-new
+           (file+head "project/${title}.org" "#+title: ${title}\n")
+           :immediate-finish t
+           :unnarrowed t)
 
-;; Every Zettel is a Draft until Declared Otherwise
-(defun jethro/tag-new-node-as-draft ()
-  (org-roam-tag-add '("draft")))
-(add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
+          ("s" "slipbox" plain "%?"
+           :if-new (file+head+olp "Slipbox.org" "#+title: Slipbox\n" ("NODEs" "%U ${title}"))
+           :immediate-finish t)
+          ;;
+          ;;        ("p" "daily preview" plain
+          ;;         "# %<%Y年%m月%d日 %A (第%W/52周 第%j天)>\n# 来自昨天的私语\n%? \n# 今日计划\n| item | plan time | actual use | done? |\n|------+-----------+------------+-------|\n|      |           |            |       |\n# 今日回顾\n"
+          ;;         :target (file+head+olp "DAILY.org" ""
+          ;;                                ("Dailies" "%<%Y-%m-%d %a>"))
+          ;;         :empty-lines-after 2
+          ;;         :unnarrowed t)
+          ))
 
+  ;; ;; Creating the property “type”---------------------------doom has a better config
+  ;; (cl-defmethod org-roam-node-type ((node org-roam-node))
+  ;;   "Return the TYPE of NODE."
+  ;;   (condition-case nil
+  ;;       (file-name-nondirectory
+  ;;        (directory-file-name
+  ;;         (file-name-directory
+  ;;          (file-relative-name (org-roam-node-file node) org-roam-directory))))
+  ;;     (error "")))
 
-;;; org-roam ref will bib & citar
-(defconst nic/bib-file (concat "/mnt/c/Users/NicEu/OneDrive/Documents/_00PersonalDocuments/OrgNote/notes/roam/biblio.bib"))
-(setq org-cite-global-bibliography (list nic/bib-file)
-      citar-bibliography org-cite-global-bibliography)
+  ;; ;; Modifying the display template to show the node “type”
+  ;; ;;(setq org-roam-node-display-template
+  ;; ;;      (concat "${type:15} ${title:50} " (propertize "${tags}" 'face 'org-tag)))
+  ;; (setq org-roam-node-display-template
+  ;;       (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
 
+  ;; Every Zettel is a Draft until Declared Otherwise
+  (defun jethro/tag-new-node-as-draft ()
+    (org-roam-tag-add '("draft")))
+  (add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
+
+  )
 
 
 ;;; org-roam-ui
+;;;
 ;;setq
-(setq org-roam-ui-sync-theme t
-      org-roam-ui-follow t
-      org-roam-ui-update-on-save t
-      org-roam-ui-open-on-start t)
+(after! org-roam-ui
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t)
 
-;;bind key
+  ;;bind key
+  )
 (map! :n "SPC n r u" #'org-roam-ui-mode)
 
 
 ;;; citar
-(setq citar-notes-paths (list "~/org/roam/reference")
-;;      citar-library-paths (list "/mnt/c/Users/NicEu/OneDrive/Documents/_00PersonalDocuments/Zotero")
-      )
+;;;
+(after! citar
+  (setq citar-notes-paths (list "~/org/roam/reference")
+        citar-templates   '((main . "${author editor:30%sn}     ${date year issued:4}     ${title:48}")
+                            (suffix . "          ${=key= id:15}    ${=type=:12}    ${tags keywords keywords:*}")
+                            (preview . "${author editor:%etal} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
+                            (note . "${author editor:%etal}, ${title}"))
+        )
+  )
 
 
 
