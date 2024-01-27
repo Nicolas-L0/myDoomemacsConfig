@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-;; (setq user-full-name "John Doe"
-;;       user-mail-address "john@doe.com")
+ (setq user-full-name "Nicolas Lai"
+       user-mail-address "NicEugeo@outlook.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
@@ -51,17 +51,63 @@
   (setq org-capture-templates
         '(("t" "Personal (t)odo" entry
            (file+headline "roam/Slipbox.org" "TODOs")
-           "* TODO %?" :prepend t :immediate-finish t)
+           "* TODO %?" :prepend t)
           ("n" "Personal (n)otes" entry
            (file+headline "roam/Slipbox.org" "NOTEs")
-           "* %U %?" :prepend t :immediate-finish t)
+           "* %U %?" :prepend t)
           ("j" "Bullet (j)ournal" entry
            (file+olp+datetree "roam/main/bujo.org")
            "* %u %?"
-           :tree-type month :immediate-finish t
-           ;;       :prepend t  ;;set to no-nil = new node on the top
+           :tree-type month           ;;       :prepend t  ;;set to no-nil = new node on the top
            )))
   (setq org-agenda-files '("~/org/roam/Slipbox.org" "~/org/roam/main/bujo.org" "~/org/roam/project/" "~/org/roam/daily/"))
+  (setq org-todo-keywords
+        '((sequence
+           "[ ](T)"   ; A task that needs doing
+           "[-](S)"   ; Task is in progress
+           "[?](W)"   ; Task is being held up or paused
+           "|"
+           "[X](D)")  ; Task was completed
+
+          (type
+           "GOAL(g)"
+           "TASK(a)"
+           "TODO(t)"
+           "|"
+           "DONE(d)")
+
+          (sequence
+           "TODO(t)"  ; A task that needs doing & is ready to do
+           "PROJ(p)"  ; A project, which usually contains other tasks
+           "LOOP(r)"  ; A recurring task
+           "STRT(s)"  ; A task that is in progress
+           "WAIT(w)"  ; Something external is holding up this task
+           "HOLD(h)"  ; This task is paused/on hold because of me
+           "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+           "|"
+           "DONE(d)"  ; Task successfully completed
+           "KILL(k)") ; Task was cancelled, aborted, or is no longer applicable
+          (sequence
+           "|"
+           "OKAY(o)"
+           "YES(y)"
+           "NO(n)"))
+        org-todo-keyword-faces
+        '(("[-]"  . +org-todo-active)
+          ("STRT" . +org-todo-active)
+          ("[?]"  . +org-todo-onhold)
+          ("WAIT" . +org-todo-onhold)
+          ("HOLD" . +org-todo-onhold)
+          ("PROJ" . +org-todo-project)
+          ("NO"   . +org-todo-cancel)
+          ("KILL" . +org-todo-cancel)
+
+          ;; ("GOAL" . (:foreground "#C34A36" :background "#4B4453" :weight bold))
+          ;; ("TASK" . (:foreground "#FF8066" :background "#4B4453" :weight bold))
+             ("GOAL" . (:foreground "#D52A1C" :background "#998E8D" :weight bold))
+             ("TASK" . (:foreground "#845EC2" :background "#998E8D" :weight bold))
+
+          ))
   )
 
 
