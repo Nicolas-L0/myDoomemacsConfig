@@ -46,6 +46,11 @@
 ;;                          My config.el Start Here
 ;;=============================================================================
 
+;;; set font
+;; ;;;
+;; (setq doom-font(font-spec :family "文泉驿等宽正黑")) ;
+;; (setq doom-font (font-spec :family "Maple Mono VF"))
+
 ;;; org
 (after! org
   (setq org-capture-templates
@@ -73,6 +78,7 @@
            "GOAL(g)"
            "TASK(a)"
            "TODO(t)"
+           "HABT(b)"
            "|"
            "DONE(d)")
 
