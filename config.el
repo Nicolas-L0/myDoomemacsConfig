@@ -114,7 +114,26 @@
              ("TASK" . (:foreground "#845EC2" :background "#998E8D" :weight bold))
 
           ))
+  (setq org-agenda-custom-commands
+        '(("n" "my project agenda view"
+           (
+            (agenda "")
+            (todo "GOAL")
+            (todo "TODO")
+            )
+           )
+          )
+        )
   )
+  ;;       '(("h" "Agenda and Home-related tasks"
+  ;;          ((agenda "")
+  ;;           (tags-todo "home")
+  ;;           (tags "garden")))
+  ;;         ("o" "Agenda and Office-related tasks"
+  ;;          ((agenda "")
+  ;;           (tags-todo "work")
+  ;;           (tags "office"))))
+  ;; )
 
 
 (add-to-list 'org-modules 'org-habit)
