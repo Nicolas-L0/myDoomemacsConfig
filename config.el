@@ -48,13 +48,14 @@
 
 ;;; set font
 ;;;
+;; 中文字体标点测试：《“中”，“关”、“言”、》
+;; Maple-font 项目地址：https://github.com/subframe7536/maple-font
 (setq doom-font (font-spec :family "Maple Mono NF CN"))
 (defun my-cjk-font()
   (dolist (charset '(kana han cjk-misc symbol bopomofo))
     (set-fontset-font t charset (font-spec :family "Maple Mono NF CN"))))
 (add-hook 'after-setting-font-hook #'my-cjk-font)
 
-;;“中”“关”“言”字体测试
 
 
 
