@@ -6,7 +6,7 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
- (setq user-full-name "Nicolas Lai"
+(setq user-full-name "Nicolas Lai"
        user-mail-address "NicEugeo@outlook.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
@@ -40,23 +40,20 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/Documents/org/")
 
 ;;=============================================================================
 ;;                          My config.el Start Here
 ;;=============================================================================
-
 ;;; set font
 ;;;
 ;; 中文字体标点测试：《“中”，“关”、“言”、》
 ;; Maple-font 项目地址：https://github.com/subframe7536/maple-font
-(setq doom-font (font-spec :family "Maple Mono NF CN"))
-(defun my-cjk-font()
-  (dolist (charset '(kana han cjk-misc symbol bopomofo))
-    (set-fontset-font t charset (font-spec :family "Maple Mono NF CN"))))
-(add-hook 'after-setting-font-hook #'my-cjk-font)
-
-
+;;(setq doom-font (font-spec :family "Maple Mono NF CN"))
+;;(defun my-cjk-font()
+;;  (dolist (charset '(kana han cjk-misc symbol bopomofo))
+;;    (set-fontset-font t charset (font-spec :family "Maple Mono NF CN"))))
+;;(add-hook 'after-setting-font-hook #'my-cjk-font)
 
 
 ;;; org
@@ -143,10 +140,7 @@
   ;;           (tags "office"))))
   ;; )
 
-
 (add-to-list 'org-modules 'org-habit)
-;;(setq org-modules '(org-habit))
-
 
 ;;; org-roam
 (after! org-roam
@@ -219,7 +213,6 @@
 
   )
 
-
 ;;; org-roam-ui
 ;;;
 ;;setq
@@ -237,7 +230,7 @@
 ;;; citar
 ;;;
 (after! citar
-  (setq citar-notes-paths (list "~/org/roam/reference")
+  (setq citar-notes-paths (list "~/Documents/org/roam/reference")
         citar-templates   '((main . "${author editor:30%sn}     ${date year issued:4}     ${title:48}")
                             (suffix . "          ${=key= id:15}    ${=type=:12}    ${tags keywords keywords:*}")
                             (preview . "${author editor:%etal} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
@@ -245,13 +238,10 @@
         )
   )
 
-
-
 ;;=============================================================================
 ;;                              My config.el End
 ;;=============================================================================
-
-
+;;
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
 ;;
